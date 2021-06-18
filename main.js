@@ -13,7 +13,7 @@ app.use(express.static('public'))
 
 
 // Routes
-
+app.use("/api",require('./routes/auth.routes'))
 app.use("/api/tasks", require('./routes/task.routes'))
 
 // Tests
