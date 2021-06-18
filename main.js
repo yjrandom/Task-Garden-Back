@@ -7,12 +7,14 @@ require('./lib/mongodb')
 
 // Middlewares
 app.use(express.json())
+
 app.use(express.static('node_modules'))
 app.use(express.static('public'))
 
 
 // Routes
 
+app.use("/api/tasks", require('./routes/task.routes'))
 
 // Tests
 // createTask().then(suc=>console.log(suc)).catch(err=>console.log(err))
