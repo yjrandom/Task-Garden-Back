@@ -11,6 +11,10 @@ const taskSchema = new Schema({
     plantAssigned: {
         type: Schema.Types.ObjectId,
         ref: 'Plant'
+    },
+    user: {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
     }
 }, {timestamps: {createdAt:'dateCreated', updatedAt:'dateUpdated'}})
 
