@@ -1,10 +1,12 @@
 const router = require('express').Router()
 const TaskModel = require('../models/task.model')
+const UserModel = require('../models/user.model')
+const checkUser = require('../lib/checkUser')
+const {removeItemFromArray} = require('../lib/func')
 
 // Test imports
 const PlantModel = require('../tests/plant.model')
-const UserModel = require('../tests/user.model')
-const checkUser = require('../tests/check')
+
 //
 
 router.get('/:id', async (req, res)=>{
@@ -26,6 +28,21 @@ router.post('/create', checkUser,  async (req,res)=>{
     }catch (e){
         console.log(e)
         res.status(400).json({message: "Failed to create tasks"})
+    }
+})
+
+router.delete('/delete/:id', checkUser, async (req, res) =>{
+    try{
+        let userId = req.user.id
+        let user = await UserModel.findById(userId)
+        let taskArr = user.tasks
+
+        await TaskModel.findByIdAndDelete(req.params.id)
+        let updatedUser = await UserModel.findByIdAndUpdate(userId,
+            {tasks: removeItemFromArray(req.params.id, taskArr)}, {new: true})
+        res.status(200).json({message: "Task deleted successfully", payload: updatedUser})
+    }catch (e){
+        res.status(400).json({message: "Failed to delete task"})
     }
 })
 

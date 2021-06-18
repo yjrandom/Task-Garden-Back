@@ -1,4 +1,4 @@
-const UserModel = require('../tests/user.model')
+const UserModel = require('../models/user.model')
 const PlantModel = require('./plant.model')
 const TaskModel = require('../models/task.model')
 
