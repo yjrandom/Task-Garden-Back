@@ -4,6 +4,18 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 require('dotenv').config()
 const {body} = require('express-validator')
+const checkUser = require("../lib/checkUser")
+
+
+router.get('/user', checkUser, async(req, res) => {
+    try{
+        let user = await UserModel.findById(req.user.id, "-password")
+        res.status(200).json({user})
+    }catch(e){
+        console.log(e)
+        res.status(500).json({ message: "something went wrong"})
+    }
+})
 
 
 //this is the route for registering
@@ -62,8 +74,7 @@ router.post('/login', async (req, res)=>{
         }
         //sign the token
         let token = jwt.sign({user:{
-            id: user._id,
-            isOwner: user.isOwner
+            id: user._id
         }},process.env.JWTSECRET,{expiresIn: "1d"})
 
         res.status(200).json({token})
