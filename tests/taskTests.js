@@ -1,7 +1,8 @@
-const PlantModel = require('../models/plant.model')
+const UserModel = require('../tests/user.model')
+const PlantModel = require('./plant.model')
 const TaskModel = require('../models/task.model')
 
-async function createTask(plantId=""){
+async function createTask(plantId="", userId="60cc4e1f65fad7077a9791f8"){
     try{
         let year = new Date().getFullYear()
         let month = new Date().getMonth()
@@ -14,6 +15,7 @@ async function createTask(plantId=""){
             dateBy: new Date(year, month, day + 1),
             //dateStart: ,
             status: "Pending", //completed
+            user: userId
         }
         let task = new TaskModel(temp)
         await task.save()
@@ -25,9 +27,6 @@ async function createTask(plantId=""){
 
 async function createPlant(){
     try{
-        let year = new Date().getFullYear()
-        let month = new Date().getMonth()
-        let day = new Date().getDate()
 
         let temp = {
             name: "sample-plant",
@@ -40,4 +39,15 @@ async function createPlant(){
     }
 }
 
-module.exports = {createTask, createPlant}
+async function createUser(){
+    try{
+
+        let user = new UserModel()
+        await user.save()
+        return {message: `${user.email} created!`,payload: user}
+    }catch (e){
+        return {message: `Failed to create user!`, error: e}
+    }
+}
+
+module.exports = {createTask, createPlant, createUser}
