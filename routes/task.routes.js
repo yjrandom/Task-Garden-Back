@@ -1,11 +1,12 @@
 const router = require('express').Router()
 const TaskModel = require('../models/task.model')
+const UserModel = require('../models/user.model')
+const checkUser = require('../lib/checkUser')
+const {removeItemFromArray} = require('../lib/func')
 
 // Test imports
 const PlantModel = require('../tests/plant.model')
-const UserModel = require('../tests/user.model')
-const checkUser = require('../tests/check')
-const {removeItemFromArray} = require('../lib/func')
+
 //
 
 router.get('/:id', async (req, res)=>{
