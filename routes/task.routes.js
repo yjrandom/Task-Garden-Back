@@ -2,7 +2,7 @@ const router = require('express').Router()
 const TaskModel = require('../models/task.model')
 const UserModel = require('../models/user.model')
 const checkUser = require('../lib/checkUser')
-const {removeItemFromArray} = require('../lib/func')
+const {removeItemFromArray, mergeObjectWithAnotherObject} = require('../lib/func')
 
 // Test imports
 const PlantModel = require('../tests/plant.model')
@@ -43,6 +43,17 @@ router.delete('/delete/:id', checkUser, async (req, res) =>{
         res.status(200).json({message: "Task deleted successfully", payload: updatedUser})
     }catch (e){
         res.status(400).json({message: "Failed to delete task"})
+    }
+})
+
+router.post('/edit/:id', checkUser, async (req, res)=>{
+    try{
+        let originalTask = await TaskModel.findById(req.params.id)
+        let task = await TaskModel.findByIdAndUpdate(req.params.id,
+            mergeObjectWithAnotherObject(originalTask, req.body),{new: true})
+        res.status(200).json({message: "Task edited successfully", payload: task})
+    }catch(e){
+        res.status(400).json({message: "Failed to edit task"})
     }
 })
 
