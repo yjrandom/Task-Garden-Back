@@ -1,5 +1,6 @@
 const router = require('express').Router()
 const UserModel = require('../models/user.model')
+const TokenModel = require('../models/token.model')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 require('dotenv').config()
@@ -48,10 +49,16 @@ router.post('/register',
         user.password = await bcrypt.hash(user.password, 10)
         await user.save()
 
-        //auto-login after registering
+        //auto-login after registering, token is created
         let token = jwt.sign({user: {
             id: user._id
-            }},process.env.JWTSECRET,{expiresIn: "1d"})
+            }},process.env.JWTSECRET,{expiresIn: "1h"})
+
+        //token will be saved to the token database
+        let newToken = new TokenModel({token})
+        await newToken.save()
+
+
         res.status(201).json({token})
     }catch (e) {
 
@@ -75,7 +82,11 @@ router.post('/login', async (req, res)=>{
         //sign the token
         let token = jwt.sign({user:{
             id: user._id
-        }},process.env.JWTSECRET,{expiresIn: "1d"})
+        }},process.env.JWTSECRET,{expiresIn: "1h"})
+
+        //token will be saved to the token database
+        let newToken = new TokenModel({token})
+        await newToken.save()
 
         res.status(200).json({token})
     }catch (e) {
@@ -84,6 +95,15 @@ router.post('/login', async (req, res)=>{
 })
 
 //route for logout
-
+router.delete('/logout', async (req, res)=>{
+    try {
+        let token = req.headers.authorization.split(" ")[1]
+        console.log(token)
+        await TokenModel.findOneAndDelete({token: token})
+        res.status(200).json()
+    }catch (e) {
+        res.status(400).json({message : e})
+    }
+})
 
 module.exports = router
