@@ -9,9 +9,10 @@ const PlantModel = require('../tests/plant.model')
 
 //
 
-router.get('/:id', async (req, res)=>{
+router.get('/', checkUser,async (req, res)=>{
     try{
-        let tasks = await TaskModel.find({user: req.params.id})
+        let userId = req.user.id
+        let tasks = await TaskModel.find({user: userId})
         res.status(200).json({tasks})
     }catch (e){
         res.status(400).json({message: "Fail to get tasks"})
