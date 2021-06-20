@@ -15,7 +15,9 @@ const taskSchema = new Schema({
     user: {
         type: Schema.Types.ObjectId,
         ref: 'User'
-    }
+    },
+    isImportant: {type: Boolean, default: false},
+    isUrgent: {type: Boolean, default: false},
 }, {timestamps: {createdAt:'dateCreated', updatedAt:'dateUpdated'}})
 
 module.exports = mongoose.model('Task', taskSchema)
