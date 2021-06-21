@@ -47,6 +47,7 @@ router.post('/register',
 
         //salt rounds
         user.password = await bcrypt.hash(user.password, 10)
+        user.isAdmin = false
         await user.save()
 
         //auto-login after registering, token is created
