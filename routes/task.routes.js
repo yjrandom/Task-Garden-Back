@@ -1,14 +1,14 @@
 const router = require('express').Router()
 const TaskModel = require('../models/task.model')
 const UserModel = require('../models/user.model')
+const dailyModel = require('../models/dailies.model')
 const checkUser = require('../lib/checkUser')
 const {removeItemFromArray, mergeObjectWithAnotherObject} = require('../lib/func')
 
 // Test imports
 // const PlantModel = require('../tests/plant.model')
 
-//
-
+//Task Dashboard
 router.get('/', checkUser,async (req, res)=>{
     try{
         let userId = req.user.id
@@ -57,5 +57,23 @@ router.post('/edit/:id', checkUser, async (req, res)=>{
         res.status(400).json({message: "Failed to edit task"})
     }
 })
+
+//Dailies
+//give you a random daily
+router.get('/dailies', checkUser,async (req, res)=>{
+    try{
+        let allDailies = await dailyModel.find()
+        let randomIndex = Math.floor(Math.random() * allDailies.length)
+        let randomDaily = allDailies[randomIndex]
+        res.status(200).json({randomDaily})
+    }catch (e){
+        res.status(400).json({message: "Fail to get daily"})
+    }
+})
+
+
+
+
+
 
 module.exports = router
