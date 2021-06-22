@@ -20,7 +20,10 @@ const userSchema = new Schema({
             ref: 'Plant'
         }
     ],
-    dailies:[{type: Object}]
+    dailies:[{
+        type: Schema.Types.ObjectId,
+        ref: 'Task'
+    }]
 })
 
 userSchema.methods.validPassword = function(password){

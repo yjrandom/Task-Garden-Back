@@ -67,12 +67,13 @@ router.get('/dailies', checkUser,async (req, res)=>{
         weeks: 0,
         days: 0,
         hours: 0,
-        minutes: 0,
-        seconds: 10
+        minutes: 5,
+        seconds: 0
     }
     try{
         let userId = req.user.id
-        let user = await UserModel.findById(userId)
+        let user = await UserModel.findById(userId).populate('dailies')
+        console.log(user)
         let allDailies = await DailyModel.find()
         let randomIndex = Math.floor(Math.random() * allDailies.length)
         let daily = allDailies[randomIndex]
@@ -82,7 +83,7 @@ router.get('/dailies', checkUser,async (req, res)=>{
             category: daily.category,
             description: "Daily challenge task!",
             user: userId,
-            isArchived: true,
+            isArchived: false,
             dateBy: new Date(), // interval
             dateStart: new Date(), //oldest date till interval
             status: "Pending"
@@ -90,15 +91,22 @@ router.get('/dailies', checkUser,async (req, res)=>{
 
         // I will pick from the standard array and create a "Task" Model to store inside as user dailies
         // I will check if the latest dailies have been generated alr or not
+        //let userDailies = user.populate('dailies')
         let userDailies = user.dailies
+
         if (userDailies.length < 1){
             temp["dateStart"] = getCurrentDayStart()
-            temp["dateBy"] = findNextClosestInterval(currentDate, temp["dateStart"], interval)
-            let task = new TaskModel(temp)
-            console.log(task)
+        }else{
+            console.log(userDailies)
+            //let dateObj = findNewestDateInArrayOfObjects(userDailies, "dateBy", "._id")
+            temp["dateStart"] = findNewestDateInArrayOfObjects(userDailies, "dateBy", "._id")
         }
-        // findNextClosestInterval(new Date(), new Date(), interval)
-        // findNewestDateInArrayOfObjects(userDailies, "dateBy", "._id")
+
+        temp["dateBy"] = findNextClosestInterval(currentDate, temp["dateStart"], interval)
+        let task = new TaskModel(temp)
+        await task.save()
+        await UserModel.findByIdAndUpdate(userId, {$push: {dailies: task._id}})
+
 
         // > check latest dateBy, > check whether in interval, those not in interval and NOT archived, delete
         // >> add interval, round it to interval
