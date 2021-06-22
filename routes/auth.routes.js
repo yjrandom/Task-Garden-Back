@@ -83,7 +83,7 @@ router.post('/login', async (req, res)=>{
         //sign the token
         let token = jwt.sign({user:{
             id: user._id
-        }},process.env.JWTSECRET,{expiresIn: "5s"})
+        }},process.env.JWTSECRET,{expiresIn: "1h"})
 
         //token will be saved to the token database
         let newToken = new TokenModel({token})
