@@ -59,6 +59,7 @@ router.post('/edit/:id', checkUser, async (req, res)=>{
 })
 
 //Dailies
+//give you a random daily
 router.get('/dailies', checkUser,async (req, res)=>{
     try{
         let allDailies = await dailyModel.find()
@@ -69,5 +70,9 @@ router.get('/dailies', checkUser,async (req, res)=>{
         res.status(400).json({message: "Fail to get tasks"})
     }
 })
+
+
+
+
 
 module.exports = router
