@@ -3,7 +3,7 @@ const TaskModel = require('../models/task.model')
 const UserModel = require('../models/user.model')
 const DailyModel = require('../models/dailies.model')
 const checkUser = require('../lib/checkUser')
-const {removeItemFromArray, mergeObjectWithAnotherObject, findNewestDateInArrayOfObjects, findNextClosestInterval} = require('../lib/func')
+const {removeItemFromArray, mergeObjectWithAnotherObject, findNewestDateInArrayOfObjects, findNextClosestInterval, getCurrentDayStart} = require('../lib/func')
 
 // Test imports
 // const PlantModel = require('../tests/plant.model')
@@ -76,12 +76,12 @@ router.get('/dailies', checkUser,async (req, res)=>{
         let allDailies = await DailyModel.find()
         let randomIndex = Math.floor(Math.random() * allDailies.length)
         let daily = allDailies[randomIndex]
-
+        let currentDate = new Date()
         let temp = {
             name: daily.name,
             category: daily.category,
             description: "Daily challenge task!",
-            user: user,
+            user: userId,
             isArchived: true,
             dateBy: new Date(), // interval
             dateStart: new Date(), //oldest date till interval
@@ -92,10 +92,14 @@ router.get('/dailies', checkUser,async (req, res)=>{
         // I will check if the latest dailies have been generated alr or not
         let userDailies = user.dailies
         if (userDailies.length < 1){
+            temp["dateStart"] = getCurrentDayStart()
+            temp["dateBy"] = findNextClosestInterval(currentDate, temp["dateStart"], interval)
             let task = new TaskModel(temp)
-            findNextClosestInterval(new Date(), new Date(), interval)
+            console.log(task)
         }
+        // findNextClosestInterval(new Date(), new Date(), interval)
         // findNewestDateInArrayOfObjects(userDailies, "dateBy", "._id")
+
         // > check latest dateBy, > check whether in interval, those not in interval and NOT archived, delete
         // >> add interval, round it to interval
 
