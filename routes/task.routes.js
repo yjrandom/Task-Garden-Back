@@ -67,9 +67,10 @@ router.get('/dailies', checkUser,async (req, res)=>{
         let randomDaily = allDailies[randomIndex]
         res.status(200).json({randomDaily})
     }catch (e){
-        res.status(400).json({message: "Fail to get tasks"})
+        res.status(400).json({message: "Fail to get daily"})
     }
 })
+
 
 
 
