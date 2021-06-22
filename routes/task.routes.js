@@ -5,7 +5,7 @@ const checkUser = require('../lib/checkUser')
 const {removeItemFromArray, mergeObjectWithAnotherObject} = require('../lib/func')
 
 // Test imports
-const PlantModel = require('../tests/plant.model')
+// const PlantModel = require('../tests/plant.model')
 
 //
 
