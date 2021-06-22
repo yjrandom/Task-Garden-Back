@@ -61,7 +61,15 @@ router.post('/edit/:id', checkUser, async (req, res)=>{
 //Dailies
 //give you a random daily
 router.get('/dailies', checkUser,async (req, res)=>{
-    let intervalInSeconds = 10
+    let interval = {
+        years: 0,
+        months: 0,
+        weeks: 0,
+        days: 0,
+        hours: 0,
+        minutes: 0,
+        seconds: 10
+    }
     try{
         let userId = req.user.id
         let user = await UserModel.findById(userId)
@@ -85,7 +93,7 @@ router.get('/dailies', checkUser,async (req, res)=>{
         let userDailies = user.dailies
         if (userDailies.length < 1){
             let task = new TaskModel(temp)
-            findNextClosestInterval(new Date(), new Date(), intervalInSeconds)
+            findNextClosestInterval(new Date(), new Date(), interval)
         }
         // findNewestDateInArrayOfObjects(userDailies, "dateBy", "._id")
         // > check latest dateBy, > check whether in interval, those not in interval and NOT archived, delete
