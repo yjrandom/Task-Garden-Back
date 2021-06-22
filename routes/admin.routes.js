@@ -6,7 +6,7 @@ const checkAdmin = require('../lib/checkAdmin')
 
 router.post("/florist/create", checkUser, checkAdmin, async (req,res)=>{
     try{
-        let floristPlant = await floristPlantModel(req.body)
+        let floristPlant = new floristPlantModel(req.body)
         await floristPlant.save().catch(err=>{
             //console.log(err)
             if (err.code === 11000){
