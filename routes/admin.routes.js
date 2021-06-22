@@ -13,6 +13,7 @@ router.post("/florist/create", checkUser, checkAdmin, async (req,res)=>{
             if (err.code === 11000){
                 throw "Name is already taken"
             }
+            throw err
         })
         res.status(200).json({message: "Plant added to florist"})
     }catch(e){
@@ -28,6 +29,7 @@ router.post("/dailies/create", checkUser, checkAdmin, async (req,res)=>{
             if (err.code === 11000){
                 throw "Name is already taken"
             }
+            throw err
         })
         res.status(200).json({message: "New dailies added"})
     }catch(e){
