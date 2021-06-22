@@ -1,9 +1,9 @@
 const router = require('express').Router()
 const TaskModel = require('../models/task.model')
 const UserModel = require('../models/user.model')
-const dailyModel = require('../models/dailies.model')
+const DailyModel = require('../models/dailies.model')
 const checkUser = require('../lib/checkUser')
-const {removeItemFromArray, mergeObjectWithAnotherObject} = require('../lib/func')
+const {removeItemFromArray, mergeObjectWithAnotherObject, findNewestDateInArrayOfObjects, findNextClosestInterval} = require('../lib/func')
 
 // Test imports
 // const PlantModel = require('../tests/plant.model')
@@ -61,13 +61,67 @@ router.post('/edit/:id', checkUser, async (req, res)=>{
 //Dailies
 //give you a random daily
 router.get('/dailies', checkUser,async (req, res)=>{
+    let intervalInSeconds = 10
     try{
-        let allDailies = await dailyModel.find()
+        let userId = req.user.id
+        let user = await UserModel.findById(userId)
+        let allDailies = await DailyModel.find()
         let randomIndex = Math.floor(Math.random() * allDailies.length)
-        let randomDaily = allDailies[randomIndex]
-        res.status(200).json({randomDaily})
+        let daily = allDailies[randomIndex]
+
+        let temp = {
+            name: daily.name,
+            category: daily.category,
+            description: "Daily challenge task!",
+            user: user,
+            isArchived: true,
+            dateBy: new Date(), // interval
+            dateStart: new Date(), //oldest date till interval
+            status: "Pending"
+        }
+
+        // I will pick from the standard array and create a "Task" Model to store inside as user dailies
+        // I will check if the latest dailies have been generated alr or not
+        let userDailies = user.dailies
+        if (userDailies.length < 1){
+            let task = new TaskModel(temp)
+            findNextClosestInterval(new Date(), new Date(), intervalInSeconds)
+        }
+        // findNewestDateInArrayOfObjects(userDailies, "dateBy", "._id")
+        // > check latest dateBy, > check whether in interval, those not in interval and NOT archived, delete
+        // >> add interval, round it to interval
+
+
+
+
+        res.status(200).json({daily})
     }catch (e){
+        console.log(e)
         res.status(400).json({message: "Fail to get daily"})
+    }
+})
+
+router.post('/dailies/:id', checkUser, async(req,res)=>{
+    try{
+        let userId = req.user.id
+        let user = await UserModel.findById(userId)
+
+        let daily = await DailyModel.findById(req.params.id)
+
+        // if I hit this route, I will check is user has this task alr in dailies
+        // if user has the task I will change from isArchived true to false or false to true
+
+        let task = new TaskModel(temp)
+
+
+        let dateAndStatus = {
+            dateCompleted: new Date(),
+            status: 'Completed'
+        }
+        let dailyRecord = mergeObjectWithAnotherObject(daily, dateAndStatus)
+
+    }catch(e){
+        console.log(e)
     }
 })
 
