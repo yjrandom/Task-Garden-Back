@@ -13,7 +13,7 @@ router.post("/florist/create", checkUser, checkAdmin, async (req,res)=>{
                 throw "Name is already taken"
             }
         })
-        res.status(200).json({message: "Plant added to florist", payload: floristPlant})
+        res.status(200).json({message: "Plant added to florist"})
     }catch(e){
         res.status(400).json({message: e})
     }
