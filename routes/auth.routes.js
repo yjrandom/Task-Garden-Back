@@ -89,7 +89,7 @@ router.post('/login', async (req, res)=>{
         let newToken = new TokenModel({token})
         await newToken.save()
 
-        res.status(200).json({token})
+        res.status(200).json({token, user})
     }catch (e) {
         res.status(400).json({message : e})
     }
