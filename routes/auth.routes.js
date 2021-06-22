@@ -107,4 +107,11 @@ router.delete('/logout', async (req, res)=>{
     }
 })
 
+router.get('/check', checkUser, async (req, res)=>{
+    try{
+        res.status(200).json({validity: true})
+    }catch(e){
+        res.status(401).json({validity: false})
+    }
+})
 module.exports = router
