@@ -7,6 +7,7 @@ const userSchema = new Schema({
     username: {required:true, type: String, unique: true},
     password: {required:true, type: String},
     isAdmin: {type: Boolean, default: false},
+    coins: {type: Number, default: 5 },
     tasks: [
         {
             type: Schema.Types.ObjectId,
