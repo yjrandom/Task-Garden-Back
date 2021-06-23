@@ -85,8 +85,8 @@ router.get('/dailies', checkUser,async (req, res)=>{
                 return (datefns.isEqual(el.dateBy, latestDate))
             })
         }else{
-            currentDailies = await generateRandomDailies(userId, 2, userDailies, interval)
-            
+            currentDailies = await generateRandomDailies(userId, 1, userDailies, interval)
+
             let currentDailiesId = ""
             let userDailiesId = ""
             await TaskModel.insertMany(currentDailies).then(suc=>{
