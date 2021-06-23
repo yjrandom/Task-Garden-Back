@@ -15,9 +15,9 @@ router.get('/', checkUser,async (req, res)=>{
         let userId = req.user.id
         let user = await UserModel.findById(userId).populate("tasks")
         
-        let userTasks = user.tasks
+        let tasks = user.tasks
 
-        res.status(200).json({userTasks})
+        res.status(200).json({tasks})
     }catch (e){
         res.status(400).json({message: "Fail to get tasks"})
     }
