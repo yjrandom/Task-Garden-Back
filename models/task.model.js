@@ -18,6 +18,7 @@ const taskSchema = new Schema({
     },
     isImportant: {type: Boolean, default: false},
     isUrgent: {type: Boolean, default: false},
+    isArchived: {type: Boolean, default: false}
 }, {timestamps: {createdAt:'dateCreated', updatedAt:'dateUpdated'}})
 
 module.exports = mongoose.model('Task', taskSchema)
