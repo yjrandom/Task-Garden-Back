@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
-const sapling = require('../lib/images/sapling.png')
+// const sapling = require('../lib/images/sapling.png')
 
 const plantSchema = new Schema({
     name: {required:true, type: String, unique: true},
@@ -11,7 +11,7 @@ const plantSchema = new Schema({
     currentLevel: {type: Number, default: 1},
     maxLevel: {type: Number, default: 2},
     images: [
-        {type: String, default: sapling}
+        {type: String}
     ],
     user: {
         type: Schema.Types.ObjectId,
