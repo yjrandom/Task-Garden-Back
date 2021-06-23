@@ -7,7 +7,6 @@ const checkUser = require('../lib/checkUser')
 router.get("/",checkUser, async (req, res) => {
     try{
         let floristPlants = await floristPlantModel.find()
-        console.log(req.user)
         res.status(200).json({message: "Get florist plants successful", payload: floristPlants})
     }catch(e){
         console.log(e)
@@ -18,10 +17,13 @@ router.get("/",checkUser, async (req, res) => {
 router.post("/buy",checkUser, async (req, res) => {
     try{
         //deduct the price of plant and update user.coins
-        let newCoins = req.body.user.coins - req.body.plant.price
+        let newCoins = req.body.coins - req.body.plant.price
+
+        //update the coins in the database for the user
         await UserModel.findByIdAndUpdate(req.body.user._id,{coins: newCoins})
 
-        res.status(200).json({message: "hello"})
+        //send back the updated value
+        res.status(200).json({newCoins})
     }catch(e){
         console.log(e)
         res.status(400).json({message: "Failed to get plant"})
