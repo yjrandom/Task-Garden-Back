@@ -89,12 +89,13 @@ router.get('/dailies', checkUser,async (req, res)=>{
 
             let currentDailiesId = ""
             let userDailiesId = ""
-            await TaskModel.insertMany(currentDailies).then(suc=>{
-                currentDailiesId = suc.map(el=>el._id)
-                userDailiesId = userDailies.map(el => el._id)
-                currentDailiesId = appendArrayWithAnotherArray(
-                    userDailiesId, currentDailiesId)
-            })
+            let res = await TaskModel.insertMany(currentDailies)
+
+            currentDailiesId = res.data.map(el=>el._id)
+            userDailiesId = userDailies.map(el => el._id)
+
+            currentDailiesId = appendArrayWithAnotherArray(
+                userDailiesId, currentDailiesId)
 
             let updateUser = await UserModel.findByIdAndUpdate(
                 userId, {"dailies": currentDailiesId},
