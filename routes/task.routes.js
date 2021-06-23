@@ -86,15 +86,16 @@ router.get('/dailies', checkUser,async (req, res)=>{
             })
         }else{
             currentDailies = await generateRandomDailies(userId, 1, userDailies, interval)
-
+            // console.log(currentDailies)
             let currentDailiesId = ""
             let userDailiesId = ""
-            await TaskModel.insertMany(currentDailies).then(suc=>{
-                currentDailiesId = suc.map(el=>el._id)
-                userDailiesId = userDailies.map(el => el._id)
-                currentDailiesId = appendArrayWithAnotherArray(
-                    userDailiesId, currentDailiesId)
-            })
+            let res = await TaskModel.insertMany(currentDailies)
+            currentDailies = res
+            currentDailiesId = res.map(el=>el._id)
+            userDailiesId = userDailies.map(el => el._id)
+
+            currentDailiesId = appendArrayWithAnotherArray(
+                userDailiesId, currentDailiesId)
 
             let updateUser = await UserModel.findByIdAndUpdate(
                 userId, {"dailies": currentDailiesId},
@@ -112,7 +113,7 @@ router.post('/dailies/:id', checkUser, async(req,res)=>{
         let dailyToUpdate = await TaskModel.findById(req.params.id)
         let daily = await TaskModel.findByIdAndUpdate(
             req.params.id, {"isArchived": !dailyToUpdate.isArchived }, {new: true})
-        res.status(200).json({message: "daily completed!"})
+        res.status(200).json({isArchived: !dailyToUpdate.isArchived})
     }catch(e){
         console.log(e)
         res.status(400).json({message: "Fail to get daily"})
