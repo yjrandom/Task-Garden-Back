@@ -63,6 +63,8 @@ router.post('/edit/:id', checkUser, async (req, res)=>{
 })
 
 //Dailies
+
+
 //give you a random daily
 router.get('/dailies', checkUser,async (req, res)=>{
     let interval = {
@@ -88,29 +90,11 @@ router.get('/dailies', checkUser,async (req, res)=>{
         await deletePastIncompleteDailies(userId)
 
         if(latestDate > currentDate){
-            currentDailies = userDailies.filter(el=>{
-                return (datefns.isEqual(el.dateBy, latestDate))
-            })
+            currentDailies = returnCurrentDailies(userDailies, latestDate);
         }else{
-            let currentDailiesId = ""
-            let userDailiesId = ""
-
-            currentDailies = await generateRandomDailies(userId, 1, userDailies, interval)
-
-            let res = await TaskModel.insertMany(currentDailies)
-            currentDailies = res
-            currentDailiesId = res.map(el=>el._id)
-            userDailiesId = userDailies.map(el => el._id)
-
-            currentDailiesId = appendArrayWithAnotherArray(
-                userDailiesId, currentDailiesId)
-
-            let updateUser = await UserModel.findByIdAndUpdate(
-                userId, {"dailies": currentDailiesId},
-                {new: true})
-
-
+            currentDailies = await generateNewDailies(currentDailies, userId, userDailies, interval);
         }
+
         res.status(200).json({dailies: currentDailies, currentDate: currentDate})
     }catch (e){
         console.log(e)
@@ -129,6 +113,32 @@ router.post('/dailies/:id', checkUser, async(req,res)=>{
         res.status(400).json({message: "Fail to get daily"})
     }
 })
+
+function returnCurrentDailies(userDailies, latestDate) {
+    return userDailies.filter(el => {
+        return (datefns.isEqual(el.dateBy, latestDate))
+    })
+}
+
+async function generateNewDailies(currentDailies, userId, userDailies, interval) {
+    let currentDailiesId = ""
+    let userDailiesId = ""
+
+    currentDailies = await generateRandomDailies(userId, 1, userDailies, interval)
+
+    let res = await TaskModel.insertMany(currentDailies)
+    currentDailies = res
+    currentDailiesId = res.map(el => el._id)
+    userDailiesId = userDailies.map(el => el._id)
+
+    currentDailiesId = appendArrayWithAnotherArray(
+        userDailiesId, currentDailiesId)
+
+    let updateUser = await UserModel.findByIdAndUpdate(
+        userId, {"dailies": currentDailiesId},
+        {new: true})
+    return currentDailies;
+}
 
 async function deletePastIncompleteDailies(userId){
     let currentDate = new Date()
