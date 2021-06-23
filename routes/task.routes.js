@@ -1,4 +1,5 @@
 const router = require('express').Router()
+const datefns = require('date-fns')
 const TaskModel = require('../models/task.model')
 const UserModel = require('../models/user.model')
 const DailyModel = require('../models/dailies.model')
@@ -73,48 +74,27 @@ router.get('/dailies', checkUser,async (req, res)=>{
     try{
         let userId = req.user.id
         let user = await UserModel.findById(userId).populate('dailies')
-        console.log(user)
-        let allDailies = await DailyModel.find()
-        let randomIndex = Math.floor(Math.random() * allDailies.length)
-        let daily = allDailies[randomIndex]
-        let currentDate = new Date()
-        let temp = {
-            name: daily.name,
-            category: daily.category,
-            description: "Daily challenge task!",
-            user: userId,
-            isArchived: false,
-            dateBy: new Date(), // interval
-            dateStart: new Date(), //oldest date till interval
-            status: "Pending"
-        }
-
-        // I will pick from the standard array and create a "Task" Model to store inside as user dailies
-        // I will check if the latest dailies have been generated alr or not
-        //let userDailies = user.populate('dailies')
         let userDailies = user.dailies
+        let currentDate = new Date()
+        let latestDate = findNewestDateInArrayOfObjects(
+            userDailies, "dateBy", "._id")
 
-        if (userDailies.length < 1){
-            temp["dateStart"] = getCurrentDayStart()
+        let currentDailies = []
+        if(latestDate > currentDate){
+            currentDailies = userDailies.filter(el=>{
+                return (datefns.isEqual(el.dateBy, latestDate))
+            })
         }else{
-            console.log(userDailies)
-            //let dateObj = findNewestDateInArrayOfObjects(userDailies, "dateBy", "._id")
-            temp["dateStart"] = findNewestDateInArrayOfObjects(userDailies, "dateBy", "._id")
+            let temp = await generateDaily(userId, userDailies, interval)
+
+            let task = new TaskModel(temp)
+            await task.save()
+            let newDaily = await UserModel.findByIdAndUpdate(
+                userId, {$push: {dailies: task._id}},
+                {new: true})
+            currentDailies.push(newDaily)
         }
-
-        temp["dateBy"] = findNextClosestInterval(currentDate, temp["dateStart"], interval)
-        let task = new TaskModel(temp)
-        await task.save()
-        await UserModel.findByIdAndUpdate(userId, {$push: {dailies: task._id}})
-
-
-        // > check latest dateBy, > check whether in interval, those not in interval and NOT archived, delete
-        // >> add interval, round it to interval
-
-
-
-
-        res.status(200).json({daily})
+        res.status(200).json({dailies: currentDailies, currentDate: currentDate})
     }catch (e){
         console.log(e)
         res.status(400).json({message: "Fail to get daily"})
@@ -125,15 +105,11 @@ router.post('/dailies/:id', checkUser, async(req,res)=>{
     try{
         let userId = req.user.id
         let user = await UserModel.findById(userId)
-
-        let daily = await DailyModel.findById(req.params.id)
-
+        
         // if I hit this route, I will check is user has this task alr in dailies
         // if user has the task I will change from isArchived true to false or false to true
 
         let task = new TaskModel(temp)
-
-
         let dateAndStatus = {
             dateCompleted: new Date(),
             status: 'Completed'
@@ -145,9 +121,34 @@ router.post('/dailies/:id', checkUser, async(req,res)=>{
     }
 })
 
+async function generateDaily(userId, userDailies, interval){
+    let allDailies = await DailyModel.find()
+    let randomIndex = Math.floor(Math.random() * allDailies.length)
+    let daily = allDailies[randomIndex]
+    let currentDate = new Date()
+    let latestDate = findNewestDateInArrayOfObjects(
+        userDailies, "dateBy", "._id")
 
+    let temp = {
+        name: daily.name,
+        category: daily.category,
+        description: "Daily challenge task!",
+        user: userId,
+        isArchived: false,
+        dateBy: new Date(), // interval
+        dateStart: new Date(), //oldest date till interval
+        status: "Pending"
+    }
+    console.log(temp)
+    if (userDailies.length < 1){
+        temp["dateStart"] = getCurrentDayStart()
+    }else{
+        temp["dateStart"] = latestDate
+    }
 
+    temp["dateBy"] = findNextClosestInterval(currentDate, temp["dateStart"], interval)
 
-
+    return temp
+}
 
 module.exports = router
