@@ -78,20 +78,25 @@ router.get('/dailies', checkUser,async (req, res)=>{
         let userId = req.user.id
         let user = await UserModel.findById(userId).populate('dailies')
         let userDailies = user.dailies
+
         let currentDate = new Date()
         let latestDate = findNewestDateInArrayOfObjects(
             userDailies, "dateBy", "._id")
 
         let currentDailies = []
+
+        await deletePastIncompleteDailies(userId)
+
         if(latestDate > currentDate){
             currentDailies = userDailies.filter(el=>{
                 return (datefns.isEqual(el.dateBy, latestDate))
             })
         }else{
-            currentDailies = await generateRandomDailies(userId, 1, userDailies, interval)
-            // console.log(currentDailies)
             let currentDailiesId = ""
             let userDailiesId = ""
+
+            currentDailies = await generateRandomDailies(userId, 1, userDailies, interval)
+
             let res = await TaskModel.insertMany(currentDailies)
             currentDailies = res
             currentDailiesId = res.map(el=>el._id)
@@ -103,6 +108,8 @@ router.get('/dailies', checkUser,async (req, res)=>{
             let updateUser = await UserModel.findByIdAndUpdate(
                 userId, {"dailies": currentDailiesId},
                 {new: true})
+
+
         }
         res.status(200).json({dailies: currentDailies, currentDate: currentDate})
     }catch (e){
@@ -123,6 +130,29 @@ router.post('/dailies/:id', checkUser, async(req,res)=>{
     }
 })
 
+async function deletePastIncompleteDailies(userId){
+    let currentDate = new Date()
+    let dailiesToDelete = await TaskModel.find({user: userId, isArchived: false})
+    let user = await UserModel.findById(userId)
+
+    dailiesToDelete = dailiesToDelete.filter(el => {
+        return (el.dateBy < currentDate)
+    })
+
+    for (let i = dailiesToDelete.length - 1; i >= 0 ; i--){
+        await TaskModel.findByIdAndDelete(dailiesToDelete[i]._id)
+    }
+
+    let dailiesToDeleteId = dailiesToDelete.map(el => el._id.toString())
+    let newUserDailies = user.dailies.filter(el => {
+        return (!dailiesToDeleteId.includes(el._id.toString()))
+    })
+
+    await UserModel.findByIdAndUpdate(userId, {dailies: newUserDailies})
+
+    return dailiesToDelete
+}
+
 async function generateRandomDailies(userId, count, userDailies, interval){
     let allDailies = await DailyModel.find()
     let latestDate = findNewestDateInArrayOfObjects(
@@ -135,7 +165,7 @@ async function generateRandomDailies(userId, count, userDailies, interval){
         }else{
             daily = allDailies[0]
         }
-        let temp = generateDaily(daily, interval, userId, userDailies)
+        let temp = constructDaily(daily, interval, userId, userDailies)
 
         task = new TaskModel(temp)
         arr.push(temp)
@@ -143,7 +173,7 @@ async function generateRandomDailies(userId, count, userDailies, interval){
     return arr
 }
 
-function generateDaily(daily, interval, userId, userDailies){
+function constructDaily(daily, interval, userId, userDailies){
     let currentDate = new Date()
     let latestDate = findNewestDateInArrayOfObjects(
         userDailies, "dateBy", "._id")
