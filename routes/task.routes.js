@@ -13,8 +13,11 @@ const {removeItemFromArray, mergeObjectWithAnotherObject, findNewestDateInArrayO
 router.get('/', checkUser,async (req, res)=>{
     try{
         let userId = req.user.id
-        let tasks = await TaskModel.find({user: userId})
-        res.status(200).json({tasks})
+        let user = await UserModel.findById(userId).populate("tasks")
+        
+        let userTasks = user.tasks
+
+        res.status(200).json({userTasks})
     }catch (e){
         res.status(400).json({message: "Fail to get tasks"})
     }
