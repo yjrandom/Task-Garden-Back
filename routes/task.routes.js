@@ -90,7 +90,6 @@ router.get('/dailies', checkUser,async (req, res)=>{
             let currentDailiesId = ""
             let userDailiesId = ""
             let res = await TaskModel.insertMany(currentDailies)
-            console.log(res)
             currentDailies = res
             currentDailiesId = res.map(el=>el._id)
             userDailiesId = userDailies.map(el => el._id)
