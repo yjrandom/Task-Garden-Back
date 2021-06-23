@@ -103,21 +103,13 @@ router.get('/dailies', checkUser,async (req, res)=>{
 
 router.post('/dailies/:id', checkUser, async(req,res)=>{
     try{
-        let userId = req.user.id
-        let user = await UserModel.findById(userId)
-        
-        // if I hit this route, I will check is user has this task alr in dailies
-        // if user has the task I will change from isArchived true to false or false to true
-
-        let task = new TaskModel(temp)
-        let dateAndStatus = {
-            dateCompleted: new Date(),
-            status: 'Completed'
-        }
-        let dailyRecord = mergeObjectWithAnotherObject(daily, dateAndStatus)
-
+        let dailyToUpdate = await TaskModel.findById(req.params.id)
+        let daily = await TaskModel.findByIdAndUpdate(
+            req.params.id, {"isArchived": !dailyToUpdate.isArchived }, {new: true})
+        res.status(200).json({message: "daily completed!"})
     }catch(e){
         console.log(e)
+        res.status(400).json({message: "Fail to get daily"})
     }
 })
 
