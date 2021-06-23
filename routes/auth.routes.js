@@ -99,7 +99,6 @@ router.post('/login', async (req, res)=>{
 router.delete('/logout', async (req, res)=>{
     try {
         let token = req.headers.authorization.split(" ")[1]
-        console.log(token)
         await TokenModel.findOneAndDelete({token: token})
         res.status(200).json()
     }catch (e) {
