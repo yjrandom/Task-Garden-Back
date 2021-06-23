@@ -4,7 +4,7 @@ const TaskModel = require('../models/task.model')
 const UserModel = require('../models/user.model')
 const DailyModel = require('../models/dailies.model')
 const checkUser = require('../lib/checkUser')
-const {removeItemFromArray, mergeObjectWithAnotherObject, findNewestDateInArrayOfObjects, findNextClosestInterval, getCurrentDayStart} = require('../lib/func')
+const {removeItemFromArray, mergeObjectWithAnotherObject, findNewestDateInArrayOfObjects, findNextClosestInterval, getCurrentDayStart, appendArrayWithAnotherArray} = require('../lib/func')
 
 // Test imports
 // const PlantModel = require('../tests/plant.model')
@@ -85,14 +85,20 @@ router.get('/dailies', checkUser,async (req, res)=>{
                 return (datefns.isEqual(el.dateBy, latestDate))
             })
         }else{
-            let temp = await generateDaily(userId, userDailies, interval)
+            currentDailies = await generateRandomDailies(userId, 2, userDailies, interval)
+            
+            let currentDailiesId = ""
+            let userDailiesId = ""
+            await TaskModel.insertMany(currentDailies).then(suc=>{
+                currentDailiesId = suc.map(el=>el._id)
+                userDailiesId = userDailies.map(el => el._id)
+                currentDailiesId = appendArrayWithAnotherArray(
+                    userDailiesId, currentDailiesId)
+            })
 
-            let task = new TaskModel(temp)
-            await task.save()
-            let newDaily = await UserModel.findByIdAndUpdate(
-                userId, {$push: {dailies: task._id}},
+            let updateUser = await UserModel.findByIdAndUpdate(
+                userId, {"dailies": currentDailiesId},
                 {new: true})
-            currentDailies.push(newDaily)
         }
         res.status(200).json({dailies: currentDailies, currentDate: currentDate})
     }catch (e){
@@ -113,33 +119,50 @@ router.post('/dailies/:id', checkUser, async(req,res)=>{
     }
 })
 
-async function generateDaily(userId, userDailies, interval){
+async function generateRandomDailies(userId, count, userDailies, interval){
     let allDailies = await DailyModel.find()
-    let randomIndex = Math.floor(Math.random() * allDailies.length)
-    let daily = allDailies[randomIndex]
+    let latestDate = findNewestDateInArrayOfObjects(
+        userDailies, "dateBy", "._id")
+    let arr = []; let daily; let task
+    for(let i = 0; i < count; i++){
+        let randomIndex = Math.floor(Math.random() * allDailies.length)
+        if (allDailies.length > 0){
+            daily = allDailies.splice(randomIndex, 1)[0]
+        }else{
+            daily = allDailies[0]
+        }
+        let temp = generateDaily(daily, interval, userId, userDailies)
+
+        task = new TaskModel(temp)
+        arr.push(temp)
+    }
+    return arr
+}
+
+function generateDaily(daily, interval, userId, userDailies){
     let currentDate = new Date()
     let latestDate = findNewestDateInArrayOfObjects(
         userDailies, "dateBy", "._id")
-
     let temp = {
         name: daily.name,
         category: daily.category,
         description: "Daily challenge task!",
-        user: userId,
         isArchived: false,
         dateBy: new Date(), // interval
         dateStart: new Date(), //oldest date till interval
         status: "Pending"
     }
-    console.log(temp)
+
+    temp["user"] = userId
+
     if (userDailies.length < 1){
         temp["dateStart"] = getCurrentDayStart()
     }else{
-        temp["dateStart"] = latestDate
+        temp["dateStart"] =  datefns.sub(findNextClosestInterval(
+            currentDate, latestDate, interval),interval)
     }
-
-    temp["dateBy"] = findNextClosestInterval(currentDate, temp["dateStart"], interval)
-
+    temp["dateBy"] = findNextClosestInterval(
+        currentDate, temp["dateStart"], interval)
     return temp
 }
 
