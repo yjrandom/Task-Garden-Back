@@ -22,7 +22,10 @@ router.post("/buy",checkUser, async (req, res) => {
         //update the coins in the database for the user
         await UserModel.findByIdAndUpdate(req.body.user._id,{coins: newCoins})
 
-        //send back the updated value
+        //create a plant that is
+        console.log(req.body)
+
+        //send back the updated value of the coins
         res.status(200).json({newCoins})
     }catch(e){
         console.log(e)
