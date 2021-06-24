@@ -28,8 +28,7 @@ const plantSchema = new Schema({
             type: Schema.Types.ObjectId,
             ref: 'Task'
         }
-    ],
-    isAvailableAtFlorist: {type: Boolean, default: true}
+    ]
 })
 
 module.exports = mongoose.model('Plant', plantSchema)

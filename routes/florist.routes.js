@@ -24,6 +24,8 @@ router.post("/buy",checkUser, async (req, res) => {
         await UserModel.findByIdAndUpdate(req.body.user._id,{coins: newCoins})
 
         //create a plant that will have the user id assigned
+
+        delete req.body.plant._id //delete it's original id first
         let plant = new PlantModel(req.body.plant)
         plant.user = req.body.user._id
         await plant.save()
