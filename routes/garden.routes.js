@@ -22,7 +22,6 @@ router.get("/", checkUser, async (req,res) => {
                 await PlantModel.findByIdAndUpdate(garden.plants[i], {currentLevel: 2})
             }
             garden.plants[i] = plant
-
         }
 
         res.status(200).json({garden})
