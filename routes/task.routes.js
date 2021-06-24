@@ -63,9 +63,11 @@ router.post('/edit/:id', checkUser, async (req, res)=>{
     }
 })
 
-router.post('/done/:id', checkUser, async (req, res)=>{
+router.get('/done/:id', checkUser, async (req, res)=>{
     try{
+
         let originalTask = await TaskModel.findById(req.params.id)
+
         let newStatus = originalTask["status"]
         if (originalTask["status"] === undefined){
             newStatus = "Completed"

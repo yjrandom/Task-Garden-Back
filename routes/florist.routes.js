@@ -29,7 +29,6 @@ router.post("/buy",checkUser, async (req, res) => {
         let plant = new PlantModel(req.body.plant)
         plant.user = req.body.user._id
         await plant.save()
-
         //send back the updated value of the coins
         res.status(200).json({newCoins})
     }catch(e){
