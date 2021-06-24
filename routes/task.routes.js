@@ -3,11 +3,11 @@ const datefns = require('date-fns')
 const TaskModel = require('../models/task.model')
 const UserModel = require('../models/user.model')
 const DailyModel = require('../models/dailies.model')
+const GardenModel = require('../models/garden.model')
+const PlantModel = require('../models/plant.model')
 const checkUser = require('../lib/checkUser')
 const {removeItemFromArray, mergeObjectWithAnotherObject, findNewestDateInArrayOfObjects, findNextClosestInterval, getCurrentDayStart, appendArrayWithAnotherArray} = require('../lib/func')
 
-// Test imports
-// const PlantModel = require('../tests/plant.model')
 
 //Task Dashboard
 router.get('/', checkUser,async (req, res)=>{
@@ -18,7 +18,6 @@ router.get('/', checkUser,async (req, res)=>{
         tasks = tasks.filter(el => {
             return (!el.isArchived)
         })
-
         res.status(200).json({tasks})
     }catch (e){
         res.status(400).json({message: "Fail to get tasks"})
@@ -28,6 +27,7 @@ router.get('/', checkUser,async (req, res)=>{
 router.post('/create', checkUser,  async (req,res)=>{
     try{
         let task = new TaskModel(req.body)
+        await PlantModel.findByIdAndUpdate(task.plantAssigned, {$push:{pendingTasks: task._id}})
         task.user = req.user.id
         task.status = "Pending"
         await task.save()
@@ -87,8 +87,23 @@ router.get('/done/:id', checkUser, async (req, res)=>{
     }
 })
 
-//Dailies
+// Get Assignable plants
+router.get('/assignable', checkUser, async (req, res) => {
+    try {
+        let userId = req.user.id
+        let gardenPlants = await GardenModel.findOne({user: userId}).populate('plants')
 
+        let assignablePlants = gardenPlants.plants.filter(plant => {
+            return (plant.pendingTasks.length + plant.completedTasks.length) < 5
+        })
+        res.status(200).json({assignablePlants})
+    } catch (e) {
+        res.status(400).json({message: e})
+    }
+})
+
+
+//Dailies
 
 //give you a random daily
 router.get('/dailies', checkUser,async (req, res)=>{
