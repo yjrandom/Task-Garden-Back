@@ -13,7 +13,7 @@ router.get("/", checkUser, async (req,res) => {
         if(!garden) {
             let newGarden = new GardenModel({user: userId})
             await newGarden.save()
-            garden = await GardenModel.findOne({user: userId}).populate("plants")
+            garden = await GardenModel.findOne({user: userId})
         }
 
         for(let i = 0; i < garden.plants.length; i++) {
