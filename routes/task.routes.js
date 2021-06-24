@@ -47,7 +47,6 @@ router.delete('/delete/:id', checkUser, async (req, res) =>{
         let userId = req.user.id
         let user = await UserModel.findById(userId)
         let taskArr = user.tasks
-
         await TaskModel.findByIdAndDelete(req.params.id)
         let updatedUser = await UserModel.findByIdAndUpdate(userId,
             {tasks: removeItemFromArray(req.params.id, taskArr)}, {new: true})
