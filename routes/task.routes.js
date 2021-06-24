@@ -47,7 +47,6 @@ router.delete('/delete/:id', checkUser, async (req, res) =>{
         let userId = req.user.id
         let user = await UserModel.findById(userId)
         let taskArr = user.tasks
-
         await TaskModel.findByIdAndDelete(req.params.id)
         let updatedUser = await UserModel.findByIdAndUpdate(userId,
             {tasks: removeItemFromArray(req.params.id, taskArr)}, {new: true})
@@ -104,11 +103,8 @@ router.get('/done/:id', checkUser, async (req, res)=>{
 router.get('/assignable', checkUser, async (req, res) => {
     try {
         let userId = req.user.id
-        let gardenPlants = await GardenModel.findOne({user: userId}).populate('plants')
+        let assignablePlants = await GardenModel.findOne({user: userId}).populate('plants')
 
-        let assignablePlants = gardenPlants.plants.filter(plant => {
-            return (plant.pendingTasks.length + plant.completedTasks.length) < 5
-        })
         res.status(200).json({assignablePlants})
     } catch (e) {
         res.status(400).json({message: e})
