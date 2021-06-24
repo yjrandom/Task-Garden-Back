@@ -3,8 +3,8 @@ const Schema = mongoose.Schema
 // const sapling = require('../lib/images/sapling.png')
 
 const plantSchema = new Schema({
-    name: {required:true, type: String, unique: true},
-    description: { type: String, unique: true},
+    name: {required:true, type: String},
+    description: { type: String},
     price: {required:true, type: Number},
     currentGrowth: {type: Number, default: 1},
     maxGrowth: {required:true, type: Number},
