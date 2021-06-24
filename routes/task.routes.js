@@ -14,8 +14,10 @@ router.get('/', checkUser,async (req, res)=>{
     try{
         let userId = req.user.id
         let user = await UserModel.findById(userId).populate("tasks")
-        
         let tasks = user.tasks
+        tasks = tasks.filter(el => {
+            return (!el.isArchived)
+        })
 
         res.status(200).json({tasks})
     }catch (e){
