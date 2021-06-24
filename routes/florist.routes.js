@@ -21,14 +21,16 @@ router.post("/buy",checkUser, async (req, res) => {
         let newCoins = req.body.coins - req.body.plant.price
 
         //update the coins in the database for the user
-        await UserModel.findByIdAndUpdate(req.body.user._id,{coins: newCoins})
+        await UserModel.findByIdAndUpdate(req.user.id,{coins: newCoins})
 
         //create a plant that will have the user id assigned
-
         delete req.body.plant._id //delete it's original id first
         let plant = new PlantModel(req.body.plant)
-        plant.user = req.body.user._id
-        await plant.save()
+        plant.user = req.user.id
+        let savedPlant = await plant.save()
+
+        //update user with new plant's id
+        await UserModel.findByIdAndUpdate(req.user.id,{$push:{plants: savedPlant._id}})
 
         //send back the updated value of the coins
         res.status(200).json({newCoins})
