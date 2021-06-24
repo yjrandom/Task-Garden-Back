@@ -76,18 +76,27 @@ router.get('/done/:id', checkUser, async (req, res)=>{
             newStatus = "Completed"
         }else if (originalTask["status"] === "Pending"){
             newStatus = "Completed"
-
             if(originalTask.plantAssigned){
                 let plant = await PlantModel.findById(originalTask.plantAssigned)
                 let plantPendingTasksArr = plant.pendingTasks
-                let test = await PlantModel.findByIdAndUpdate(originalTask.plantAssigned,{$push:{completedTasks:req.params.id},pendingTasks: removeItemFromArray(req.params.id, plantPendingTasksArr)},{new: true})
+                let plantCompletedTasksArr = plant.completedTasks
+
+                let newGrowth = plantCompletedTasksArr.length + 2
+                await PlantModel.findByIdAndUpdate(originalTask.plantAssigned,
+                    {$push:{completedTasks:req.params.id},
+                        pendingTasks: removeItemFromArray(req.params.id, plantPendingTasksArr),
+                        currentGrowth: newGrowth
+                    })
             }
         }else if (originalTask["status"] === "Completed"){
             newStatus = "Pending"
             if(originalTask.plantAssigned){
                 let plant = await PlantModel.findById(originalTask.plantAssigned)
-                let plantCompleteTasksArr = plant.completedTasks
-                await PlantModel.findByIdAndUpdate(originalTask.plantAssigned,{$push:{pendingTasks:req.params.id},completedTasks: removeItemFromArray(req.params.id, plantCompleteTasksArr)})
+                let plantCompletedTasksArr = plant.completedTasks
+                await PlantModel.findByIdAndUpdate(originalTask.plantAssigned,
+                    {$push:{pendingTasks:req.params.id},
+                        completedTasks: removeItemFromArray(req.params.id, plantCompletedTasksArr)
+                    })
             }
         }
 

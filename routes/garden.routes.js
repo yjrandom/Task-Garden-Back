@@ -18,7 +18,11 @@ router.get("/", checkUser, async (req,res) => {
 
         for(let i = 0; i < garden.plants.length; i++) {
             let plant =  await PlantModel.findById(garden.plants[i])
+            if(plant.currentGrowth >= plant.maxGrowth) {
+                await PlantModel.findByIdAndUpdate(garden.plants[i], {currentLevel: 2})
+            }
             garden.plants[i] = plant
+
         }
 
         res.status(200).json({garden})
