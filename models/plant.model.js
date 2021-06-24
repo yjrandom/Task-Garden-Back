@@ -1,17 +1,17 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
-const sapling = require('../lib/images/sapling.png')
+// const sapling = require('../lib/images/sapling.png')
 
 const plantSchema = new Schema({
-    name: {required:true, type: String, unique: true},
-    description: { type: String, unique: true},
+    name: {required:true, type: String},
+    description: { type: String},
     price: {required:true, type: Number},
     currentGrowth: {type: Number, default: 1},
     maxGrowth: {required:true, type: Number},
     currentLevel: {type: Number, default: 1},
     maxLevel: {type: Number, default: 2},
     images: [
-        {type: String, default: sapling}
+        {type: String}
     ],
     user: {
         type: Schema.Types.ObjectId,
@@ -28,8 +28,7 @@ const plantSchema = new Schema({
             type: Schema.Types.ObjectId,
             ref: 'Task'
         }
-    ],
-    isAvailableAtFlorist: {type: Boolean, default: true}
+    ]
 })
 
 module.exports = mongoose.model('Plant', plantSchema)
