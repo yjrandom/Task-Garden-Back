@@ -123,6 +123,7 @@ async function addRemoveCoinsFromUser(isAdd, userId){
     let userCoins = user.coins
     isAdd ? userCoins += 1000 : userCoins -= 1000
     await UserModel.findByIdAndUpdate(userId, {coins: userCoins})
+    return
 }
 
 function returnCurrentDailies(userDailies, latestDate) {
