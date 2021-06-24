@@ -27,6 +27,7 @@ router.post('/create', checkUser,  async (req,res)=>{
     try{
         let task = new TaskModel(req.body)
         task.user = req.user.id
+        task.status = "Pending"
         await task.save()
         await UserModel.findByIdAndUpdate(req.user.id, {$push: {tasks: task._id}})
         res.status(200).json({message: "Task created successfully", payload: task})
@@ -59,6 +60,26 @@ router.post('/edit/:id', checkUser, async (req, res)=>{
         res.status(200).json({message: "Task edited successfully", payload: task})
     }catch(e){
         res.status(400).json({message: "Failed to edit task"})
+    }
+})
+
+router.post('/done/:id', checkUser, async (req, res)=>{
+    try{
+        let originalTask = await TaskModel.findById(req.params.id)
+        let newStatus = originalTask["status"]
+        if (originalTask["status"] === undefined){
+            newStatus = "Completed"
+        }else if (originalTask["status"] === "Pending"){
+            newStatus = "Completed"
+        }else if (originalTask["status"] === "Completed"){
+            newStatus = "Pending"
+        }
+
+        let task = await TaskModel.findByIdAndUpdate(req.params.id, {status: `${newStatus}`}, {new: true})
+        res.status(200).json({message: "Task marked as Completed successfully", payload: task})
+    }catch(e){
+        console.log(e)
+        res.status(400).json({message: "Failed to change task status"})
     }
 })
 
