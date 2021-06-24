@@ -1,6 +1,9 @@
 const express = require('express')
 const app = express()
 
+const path = require('path');
+app.use(express.static(path.resolve(__dirname, 'build')));
+
 
 require('dotenv').config()
 require('./lib/mongodb')
@@ -19,7 +22,9 @@ app.use("/api/florist", require('./routes/florist.routes'))
 app.use("/api/admin", require('./routes/admin.routes'))
 app.use("/api/garden", require('./routes/garden.routes'))
 
-// Tests
+app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'build', 'index.html'));
+});
 
 
 // Listen
