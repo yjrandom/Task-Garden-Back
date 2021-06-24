@@ -167,8 +167,6 @@ async function deletePastIncompleteDailies(userId){
 
 async function generateRandomDailies(userId, count, userDailies, interval){
     let allDailies = await DailyModel.find()
-    let latestDate = findNewestDateInArrayOfObjects(
-        userDailies, "dateBy", "._id")
     let arr = []; let daily; let task
     for(let i = 0; i < count; i++){
         let randomIndex = Math.floor(Math.random() * allDailies.length)
