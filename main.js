@@ -17,6 +17,7 @@ app.use("/api",require('./routes/auth.routes'))
 app.use("/api/tasks", require('./routes/task.routes'))
 app.use("/api/florist", require('./routes/florist.routes'))
 app.use("/api/admin", require('./routes/admin.routes'))
+app.use("/api/garden", require('./routes/garden.routes'))
 
 // Tests
 
