@@ -130,12 +130,23 @@ router.post('/dailies/:id', checkUser, async(req,res)=>{
         let dailyToUpdate = await TaskModel.findById(req.params.id)
         let daily = await TaskModel.findByIdAndUpdate(
             req.params.id, {"isArchived": !dailyToUpdate.isArchived }, {new: true})
+
+        await addRemoveCoinsFromUser(!dailyToUpdate.isArchived, req.user.id)
+
         res.status(200).json({isArchived: !dailyToUpdate.isArchived})
     }catch(e){
         console.log(e)
         res.status(400).json({message: "Fail to get daily"})
     }
 })
+
+async function addRemoveCoinsFromUser(isAdd, userId){
+    const dailyCoin = 1000
+    let user = await UserModel.findById(userId)    
+    let userCoins = user.coins
+    isAdd ? userCoins += 1000 : userCoins -= 1000
+    await UserModel.findByIdAndUpdate(userId, {coins: userCoins})
+}
 
 function returnCurrentDailies(userDailies, latestDate) {
     return userDailies.filter(el => {
