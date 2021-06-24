@@ -30,13 +30,11 @@ router.get("/inventory", checkUser, async (req,res) => {
 router.post("/inventory/:id", checkUser, async (req, res) => {
     try {
         let userId = req.user.id
-        console.log(userId, req.body.index)
         let tempGarden = await GardenModel.findOne({user: userId})
-        tempGarden.plants[]
-
-        // let garden = await GardenModel.findOneAndUpdate({user: userId}, {plants[req.body.index]: req.params.id }, {new: true})
-        // console.log(garden)
-        // res.status(200).json({message: "Plant inserted", payload: garden})
+        tempGarden.plants[req.body.index] = req.params.id
+        let plants = tempGarden.plants
+        let garden = await GardenModel.findOneAndUpdate({user: userId}, {plants: plants}, {new: true})
+        res.status(200).json({message: "Plant inserted", payload: garden})
     } catch (e) {
         console.log(e)
         res.status(400).json({message: "Failed to insert plant"})
