@@ -27,7 +27,7 @@ router.get('/', checkUser,async (req, res)=>{
 router.post('/create', checkUser,  async (req,res)=>{
     try{
         let task = new TaskModel(req.body)
-        console.log(task)
+
         if(task.plantAssigned) {
             await PlantModel.findByIdAndUpdate(task.plantAssigned, {$push: {pendingTasks: task._id}}, {new: true})
         }
@@ -69,7 +69,6 @@ router.post('/edit/:id', checkUser, async (req, res)=>{
 
 router.get('/done/:id', checkUser, async (req, res)=>{
     try{
-
         let originalTask = await TaskModel.findById(req.params.id)
 
         let newStatus = originalTask["status"]
@@ -77,8 +76,19 @@ router.get('/done/:id', checkUser, async (req, res)=>{
             newStatus = "Completed"
         }else if (originalTask["status"] === "Pending"){
             newStatus = "Completed"
+
+            if(originalTask.plantAssigned){
+                let plant = await PlantModel.findById(originalTask.plantAssigned)
+                let plantPendingTasksArr = plant.pendingTasks
+                let test = await PlantModel.findByIdAndUpdate(originalTask.plantAssigned,{$push:{completedTasks:req.params.id},pendingTasks: removeItemFromArray(req.params.id, plantPendingTasksArr)},{new: true})
+            }
         }else if (originalTask["status"] === "Completed"){
             newStatus = "Pending"
+            if(originalTask.plantAssigned){
+                let plant = await PlantModel.findById(originalTask.plantAssigned)
+                let plantCompleteTasksArr = plant.completedTasks
+                await PlantModel.findByIdAndUpdate(originalTask.plantAssigned,{$push:{pendingTasks:req.params.id},completedTasks: removeItemFromArray(req.params.id, plantCompleteTasksArr)})
+            }
         }
 
         await TaskModel.findByIdAndUpdate(req.params.id, {status: `${newStatus}`}, {new: true})
