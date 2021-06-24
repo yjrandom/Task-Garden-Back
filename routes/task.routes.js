@@ -78,7 +78,7 @@ router.get('/done/:id', checkUser, async (req, res)=>{
         }
 
         let task = await TaskModel.findByIdAndUpdate(req.params.id, {status: `${newStatus}`}, {new: true})
-        res.status(200).json({message: "Task marked as Completed successfully", payload: task})
+        res.status(200).json({message: `Task marked as ${newStatus} successfully`, payload: newStatus})
     }catch(e){
         console.log(e)
         res.status(400).json({message: "Failed to change task status"})
