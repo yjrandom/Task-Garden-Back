@@ -13,7 +13,7 @@ const {removeItemFromArray, mergeObjectWithAnotherObject, findNewestDateInArrayO
 router.get('/', checkUser,async (req, res)=>{
     try{
         let userId = req.user.id
-        let user = await UserModel.findById(userId).populate("tasks")
+        let user = await UserModel.findById(userId).populate({path: "tasks", populate: {path: "plantAssigned"}})
         let tasks = user.tasks
         tasks = tasks.filter(el => {
             return (!el.isArchived)
@@ -27,7 +27,10 @@ router.get('/', checkUser,async (req, res)=>{
 router.post('/create', checkUser,  async (req,res)=>{
     try{
         let task = new TaskModel(req.body)
-        await PlantModel.findByIdAndUpdate(task.plantAssigned, {$push:{pendingTasks: task._id}})
+        console.log(task)
+        if(task.plantAssigned) {
+            await PlantModel.findByIdAndUpdate(task.plantAssigned, {$push: {pendingTasks: task._id}}, {new: true})
+        }
         task.user = req.user.id
         task.status = "Pending"
         await task.save()
