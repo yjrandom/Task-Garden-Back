@@ -142,11 +142,13 @@ async function generateNewDailies(currentDailies, userId, userDailies, interval)
 
 async function deletePastIncompleteDailies(userId){
     let currentDate = new Date()
-    let dailiesToDelete = await TaskModel.find({user: userId, isArchived: false})
     let user = await UserModel.findById(userId)
+    let userDailies = user.dailies
+
+    let dailiesToDelete = await TaskModel.find({user: userId, isArchived: false})
 
     dailiesToDelete = dailiesToDelete.filter(el => {
-        return (el.dateBy < currentDate)
+        return (el.dateBy < currentDate && userDailies.includes(el._id.toString()))
     })
 
     for (let i = dailiesToDelete.length - 1; i >= 0 ; i--){
@@ -154,7 +156,7 @@ async function deletePastIncompleteDailies(userId){
     }
 
     let dailiesToDeleteId = dailiesToDelete.map(el => el._id.toString())
-    let newUserDailies = user.dailies.filter(el => {
+    let newUserDailies = userDailies.filter(el => {
         return (!dailiesToDeleteId.includes(el._id.toString()))
     })
 
