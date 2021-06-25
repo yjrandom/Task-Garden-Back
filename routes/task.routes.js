@@ -129,9 +129,9 @@ router.get('/dailies', checkUser,async (req, res)=>{
         years: 0,
         months: 0,
         weeks: 0,
-        days: 0,
+        days: 1,
         hours: 0,
-        minutes: 5,
+        minutes: 0,
         seconds: 0
     }
     try{
