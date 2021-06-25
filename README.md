@@ -9,6 +9,42 @@ This is the Task Garden. It is an application that reward users when they comple
 After a user registers or log in, they will be brought to the dashboard. This is where a user can manage their tasks. They can add tasks, complete tasks, delete tasks and archive completed tasks. 
   
 A feature of the Task Garden is upon creation of a task, the user will decide the urgency and importance of the task. This will help users prioritise the tasks that needs to be done. Each task upon creation can be assigned to a plant that has already been planted in the Garden. When a task that is assigned to a plant has been completed, the plant itself gains 'growth'. When 'growth' has maxed out, the plant will evolve from a sapling to a beautiful plant. Enjoy being productive!
+
+## General Approach
+
+### Design
+
+The overall theme of the application is focus and simplicity. 
+
+We want users to have clarity over their daily tasks in a non-cluttered environment with simple no-nonsense classification of importance and urgency
+
+At the same time, we want to motivate users to carry out tasks. Although completing tasks are rewards in their own right, we want to allow the user to visualise the mountains of work they actually accomplish so they don't lose sight of how awesome they are.
+
+We achieve this by allowing users to tie tasks to plants in their garden, and every time they complete their tasks, that plant will grow.
+
+However, we also want to encourage getting out of the comfort zone and usual humdrum and decided to give the user the option of performing a daily task. 
+
+These daily tasks are meant to be simple to complete and earns them coins which they can use to buy plants at the florist.
+
+Do Dailies > Buy Plants > Add Tasks > Do Tasks > Grow Plants > Repeat
+
+Simple.
+
+### Ownership
+
+This is app is just as much about work prioritisation as it is about personal growth. 
+
+Inculcating good habits and visualising their accumulated efforts over the years requires us to allow users to create accounts that save their tasks and progress.
+
+### Security
+
+To ensure security for the app, every route (page/action) is checked for the proper authentication using jwt.
+
+### Responsiveness
+
+As this is a relative lightweight app, and we wanted to allow the logging of tasks on-the-go (so that the user doesn't forget to add it later), the pages are designed to work on smaller screen sizes as well.
+
+
 ## Planning and Development Process
 
 ### Technologices Used
@@ -93,6 +129,34 @@ Link: https://www.figma.com/proto/k2KVINSObww30BnGk1XcRN/Project-3?node-id=1%3A2
 
 ### Challenges Faced
 
+## How-To-Use
+
+### Login
+
+
+### Dashboard
+
+![Image of Dashbord](https://git.generalassemb.ly/zhiyang/taskgarden-front/blob/master/src/assets/img/dashboard-w-instructions.png)
+
+1a. Every day, dailies will be generated for your to accomplish. 
+
+1b. Click on the "Not Done" Button to turn it to done, and earn coins!
+
+2. Press this Button to open the "Add new task button"
+
+3. New Tasks will turn up depending on which classfication you selected on the "Add new task button"
+
+4. Click on the check box to mark the start as done! Uncheck, in case you checked it wrongly
+
+5. Click on the red x Button to delete the task (Note: these are cleared permanently)
+
+6. Once you are calling it a day, press the Archive Done Tasks to archive all tasks you have marked as Done
+
+
+### Florist
+
+
+### Garden
 
 ## Acknowledgments
 
