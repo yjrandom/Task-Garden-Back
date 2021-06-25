@@ -83,6 +83,25 @@ npx i mongoose
 
 ### User Stories
 
+Users will see this when they enter the application. They will be logged in automatically after registering.
+![screenshot](https://i.imgur.com/pwsYOfE.png)
+
+Once logged in, they will be brought to their dashboard.
+![screenshot](https://i.imgur.com/mxOM0ik.png)
+Here they can access the Florist, Garden, manage their tasks and complete the Dailies.
+* Users can, complete the task by clicking on the checkbox, a strikethrough of the task will happen.
+* Users can delte the task by clicking on the "x" in the red circle.
+* Users can click the 'Not Done' button on the Dailies bar to complete the Dailies and earn coins.
+* Users can click on "Archive Done Tasks" to clear the Dashboard of completed tasks.
+
+Clicking on the "+" will bring up the task creation display.
+![screenshot](https://i.imgur.com/HpSwsif.png)
+
+
+Users can buy plants from the florist. If they do not have sufficient coins, they will not be able to purchase the plant. Plants will automatically appear in the inventory automatically, the inventory is in the Garden.
+![screenshot](https://i.imgur.com/xRA61h5.png)
+
+
 
 ### Wireframes
 
