@@ -106,11 +106,6 @@ A library to help you hash passwords. To install:
 ```javascript
 npx i bcrypt
 ```
-##### Passport
-Passport is Express-compatible authentication middleware for Node.js. To install:
-```javascript
-npx i passport
-```
 ##### Mongoose
 Mongoose is a MongoDB object modeling tool designed to work in an asynchronous environment. To install:
 ```javascript
@@ -128,6 +123,20 @@ Wireframes were developed on Figma
 Link: https://www.figma.com/proto/k2KVINSObww30BnGk1XcRN/Project-3?node-id=1%3A2&scaling=min-zoom
 
 ### Challenges Faced
+
+#### First experience in team development
+As part of the project requirement, we were assigned into teams to create a Full stack web application using MERN. This meant:
+- [x] Git merge madness
+- [x] Waiting for someone to finish something
+- [x] LOTS OF CODE REVIEW
+
+Thankfully, much of it was resolved or avoided with planning, good communication and good practices while working together.
+
+#### Front/Back End Integration
+If dealing with states in React wasn't bad enough, predicting how back-end calls will interact with states is a whole new realm of fun.  
+Figuring out where the logic should reside (Front/Back) was a big challenge.
+
+#### Authentication
 
 ## How-To-Use
 
@@ -166,5 +175,8 @@ Gave us the inspiration for the project.
 #### Forest, Copyright © 2021. All rights reserved. By SeekrTech
 For the alternative idea of growing a garden instead of an overwhelming battle royale game.
 
-#### Kai Ming, Zhi Yang & Yong Jian
+#### I don't know men 
+Kai Ming @chiakaiming  
+Zhi Yang @zhiyang  
+Yong Jian @yjrandom  
 The awesome team that brought you this amazing app.
