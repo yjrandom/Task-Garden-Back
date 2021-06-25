@@ -159,6 +159,8 @@ Figuring out where the logic should reside (Front/Back) was a big challenge.
 
 ### Login
 
+![Image of Login](https://git.generalassemb.ly/zhiyang/taskgarden-back/lib/images/landing-page-edited.png)
+
 1. Click the login button if you already have an account to login (the above modal should appear)
 
 2. If you don't have an account, register for one (the above modal should appear)!
