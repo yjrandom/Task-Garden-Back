@@ -159,14 +159,17 @@ Figuring out where the logic should reside (Front/Back) was a big challenge.
 
 ### Login
 
+1. Click the login button if you already have an account to login (the above modal should appear)
+
+2. If you don't have an account, register for one (the above modal should appear)!
 
 ### Dashboard
 
 ![Image of Dashbord](https://git.generalassemb.ly/zhiyang/taskgarden-front/blob/master/src/assets/img/dashboard-w-instructions.png)
 
-1a. Every day, dailies will be generated for your to accomplish. 
+1. a. Every day, dailies will be generated for your to accomplish. 
 
-1b. Click on the "Not Done" Button to turn it to done, and earn coins!
+1. b. Click on the "Not Done" Button to turn it to done, and earn coins!
 
 2. Press this Button to open the "Add new task button"
 
