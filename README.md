@@ -117,23 +117,18 @@ npx i mongoose
 
 ### User Stories
 
-Users will see this when they enter the application. They will be logged in automatically after registering.
-![screenshot](https://i.imgur.com/pwsYOfE.png)
-
-Once logged in, they will be brought to their dashboard.
-![screenshot](https://i.imgur.com/mxOM0ik.png)
-Here they can access the Florist, Garden, manage their tasks and complete the Dailies.
-* Users can, complete the task by clicking on the checkbox, a strikethrough of the task will happen.
-* Users can delte the task by clicking on the "x" in the red circle.
-* Users can click the 'Not Done' button on the Dailies bar to complete the Dailies and earn coins.
-* Users can click on "Archive Done Tasks" to clear the Dashboard of completed tasks.
-
-Clicking on the "+" will bring up the task creation display.
-![screenshot](https://i.imgur.com/HpSwsif.png)
+* As a user I want to have a dashboard that classifies my tasks so that I know what to priortise.
+* As a user I want to be able to create tasks, delete tasks, complete tasks so that I can see what I have to do, have done and remove tasks that I do not need.
+* As a user I want my tasks to be incentivised, so that I will want to complete my tasks.
+* As a user I want to be able to buy plants so that I can build my own garden.
+* As a user I want to be able to plant my plants in my garden so that I can grow them.
+* As a user I want to be able to assign my tasks to plants so that I can grow them.
+* As a user I want to earn coins to buy my plants so that I can plant them in the garden.
 
 
-Users can buy plants from the florist. If they do not have sufficient coins, they will not be able to purchase the plant. Plants will automatically appear in the inventory automatically, the inventory is in the Garden.
-![screenshot](https://i.imgur.com/xRA61h5.png)
+* As an admin I want to be able to add plants to the shop so that I can give users more choices in future.
+* As an admin I want to be able to add Daily Tasks so that users can earn coins for their purchases.
+
 
 
 
