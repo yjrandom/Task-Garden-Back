@@ -1,5 +1,8 @@
 # Task Garden
-Link: https://taskgardensei29.herokuapp.com/
+Link: https://taskgardensei29.herokuapp.com/  
+Repositories:  
+[Front-end](https://git.generalassemb.ly/zhiyang/taskgarden-front)  
+[Back-end](https://git.generalassemb.ly/zhiyang/taskgarden-back)  
 
 ![screenshot](https://imgur.com/RexudNn.png)
 
