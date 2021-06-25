@@ -4,7 +4,11 @@ Link: https://taskgardensei29.herokuapp.com/
 ![screenshot](https://imgur.com/RexudNn)
 
 ## Description
-
+This is the Task Garden. It is an application that reward users when they complete their tasks. The rewards come in the form of 'growth' for your virtual plants that can be planted on your virtual farm(Garden). Various plants can be bought from the shop(Florist). The currency is earned by completing daily tasks(dailies) that are generated at random by the application.
+  
+After a user registers or log in, they will be brought to the dashboard. This is where a user can manage their tasks. They can add tasks, complete tasks, delete tasks and archive completed tasks. 
+  
+A feature of the Task Garden is upon creation of a task, the user will decide the urgency and importance of the task. This will help users prioritise the tasks that needs to be done. Each task upon creation can be assigned to a plant that has already been planted in the Garden. When a task that is assigned to a plant has been completed, the plant itself gains 'growth'. When 'growth' has maxed out, the plant will evolve from a sapling to a beautiful plant. Enjoy being productive!
 ## Planning and Development Process
 
 ### Technologics Used
@@ -26,6 +30,7 @@ Back-end:
 ```
 
 ### User Stories
+
 
 ### Wireframes
 
