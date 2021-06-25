@@ -1,7 +1,7 @@
 # Task Garden
 Link: https://taskgardensei29.herokuapp.com/
 
-![screenshot](https://imgur.com/RexudNn)
+![screenshot](https://imgur.com/RexudNn.png)
 
 ## Description
 
@@ -29,7 +29,7 @@ Back-end:
 
 ### Wireframes
 
-![screenshot](https://imgur.com/HhUNxeC)
+![screenshot](https://imgur.com/HhUNxeC.png)
 
 Wireframes were developed on Figma  
 Link: https://www.figma.com/proto/k2KVINSObww30BnGk1XcRN/Project-3?node-id=1%3A2&scaling=min-zoom
